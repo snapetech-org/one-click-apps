@@ -1,3 +1,4 @@
+# ng-runner-policy: private-jit-only-v1
 name: Validate One Click Apps
 
 on:
@@ -10,7 +11,7 @@ permissions:
 
 jobs:
     build:
-        runs-on: ubuntu-latest
+        runs-on: ${{ fromJSON(format('{{"group":"ng-shared-main-jit","labels":["self-hosted","linux","x64","ng-shared-main-one-click-apps","ng-main-run-{0}","gha-{0}-build"]}}', github.run_id)) }}
         steps:
             - uses: actions/checkout@v7
             - uses: actions/setup-node@v7
