@@ -3,7 +3,7 @@ name: Validate PR Checklist
 
 on:
   pull_request_target:
-    types: [opened, edited, reopened]
+    types: [labeled]
 
 permissions:
   contents: read
@@ -12,6 +12,20 @@ permissions:
 
 jobs:
   validate:
+    if: >-
+      (
+        (
+        github.event_name == 'pull_request_target' &&
+        github.event.action == 'labeled' &&
+        (github.event.label.name == 'action:ci' || github.event.label.name == 'pool:private') &&
+        contains(github.event.pull_request.labels.*.name, 'action:ci') &&
+        contains(github.event.pull_request.labels.*.name, 'pool:private') &&
+        github.event.pull_request.head.repo.full_name == github.repository
+        )
+      ) &&
+      (
+        true
+      )
     runs-on: ${{ fromJSON(format('{{"group":"ng-shared-main-jit","labels":["self-hosted","linux","x64","ng-shared-main-one-click-apps","ng-main-run-{0}","gha-{0}-validate"]}}', github.run_id)) }}
     steps:
       - name: Validate checklist
