@@ -1,4 +1,4 @@
-# ng-runner-policy: private-jit-only-v1
+# ng-runner-policy: hosted-compatible-v1
 name: Publish One Click Apps
 run-name: action:${{ inputs.action }}:pool:${{ inputs.runner_pool }}
 
@@ -12,10 +12,10 @@ on:
         default: deploy
         required: true
       runner_pool:
-        description: Required private runner pool
+        description: Required hosted runner pool
         type: choice
-        options: [private]
-        default: private
+        options: [public]
+        default: public
         required: true
 permissions:
   contents: read
@@ -28,8 +28,8 @@ concurrency:
 
 jobs:
   deploy:
-    if: github.event_name == 'workflow_dispatch' && inputs.action == 'deploy' && inputs.runner_pool == 'private' && github.ref == 'refs/heads/master'
-    runs-on: ${{ fromJSON(format('{{"group":"ng-shared-main-jit","labels":["self-hosted","linux","x64","ng-shared-main-one-click-apps","ng-main-run-{0}","gha-{0}-deploy"]}}', github.run_id)) }}
+    if: github.event_name == 'workflow_dispatch' && inputs.action == 'deploy' && inputs.runner_pool == 'public' && github.ref == 'refs/heads/master'
+    runs-on: ubuntu-24.04
 
     environment:
       name: github-pages
